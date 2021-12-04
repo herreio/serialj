@@ -9,10 +9,10 @@ def set_stream(logger, level=None):
     if level is None:
         level = logging.INFO
     stream = logging.StreamHandler()
-    stream.setLevel(level)
     formatter = logging.Formatter("%(asctime)s [%(levelname)s] %(name)s: %(message)s", "%Y-%m-%d %H:%M:%S")
     stream.setFormatter(formatter)
     logger.addHandler(stream)
+    logger.setLevel(level)
 
 
 logger = logging.getLogger(__name__)
