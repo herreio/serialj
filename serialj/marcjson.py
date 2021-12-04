@@ -130,7 +130,7 @@ class MarcJson(SerialJson):
         924/DNB: Bestandsinformationen (EPN)
         """
         isils = self.get_holdings_isil(indicator1=indicator1, indicator2=indicator2)
-        if isil not in isils:
+        if isils is None or isil not in isils:
             self.logger.info("Library {0} has no holding for record {1}".format(isil, self.get_ppn()))
             return None
         holdings = []
