@@ -14,4 +14,5 @@ class Parser:
         self.logger = logging.getLogger(name)
         if level is None:
             level = logging.INFO
-        set_stream(self.logger, level=level)
+        if not self.logger.handlers:
+            set_stream(self.logger, level=level)

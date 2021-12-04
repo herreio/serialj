@@ -130,11 +130,13 @@ class MarcJson(SerialJson):
         924/DNB: Bestandsinformationen (EPN)
         """
         isils = self.get_holdings_isil(indicator1=indicator1, indicator2=indicator2)
-        index = [i for i, s in enumerate(isils) if s == isil]
-        if len(index) > 0:
-            epns = self.get_holdings_idn()
-            if epns is not None:
-                if len(isils) == len(epns):
-                    return [epns[i] for i in index]
-                else:
-                    self.logger.error("{0}: Unequal number of holding ISILs and EPNs".format(self.name))
+        if isil not in isils:
+            self.logger.info("Library {0} has no holding for record {1}".format(isil, self.get_ppn()))
+            return None
+        holdings = []
+        isil_fields = self.get_field("924")
+        for isil_field in isil_fields:
+            if self._value_from_row(isil_field, "b", repeat=False) == isil:
+                holdings.append(self._value_from_row(isil_field, "a", repeat=False))
+        if len(holdings) > 0:
+            return holdings

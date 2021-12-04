@@ -190,7 +190,7 @@ class PicaJson(SerialJson):
                 if len(holdings) > 0:
                     return holdings
             else:
-                self.logger.error("{0}: Unequal number of holding ISILs and EPNs".format(self.name))
+                self.logger.error("Unequal number of holding ISILs and EPNs in record {0}".format(self.get_ppn()))
 
     def get_holdings_first_entry_date(self, occurrence="01"):
         """
@@ -240,7 +240,7 @@ class PicaJson(SerialJson):
         latest_change_time = self.get_holdings_latest_change_time(occurrence=occurrence)
         if latest_change_date is not None and latest_change_time is not None:
             if len(latest_change_date) != len(latest_change_time):
-                self.logger.error("{0}: Unequal number of edit dates and times in holding data!".format(self.name))
+                self.logger.error("Unequal number of edit dates and times in holding data of record {0}".format(self.get_ppn()))
                 return None
             latest_change_str = []
             for i in range(len(latest_change_date)):
@@ -476,7 +476,7 @@ class PicaJson(SerialJson):
                 if len(dates) > 0:
                     return dates
             else:
-                self.logger.error("{0}: Unequal number of holding ISILs and new dates".format(self.name))
+                self.logger.error("Unequal number of holding ISILs and new dates in record {0}".format(self.get_ppn()))
 
     def get_holdings_isil_new_date_date(self, isil, occurrence="01"):
         """
@@ -532,4 +532,4 @@ class PicaJson(SerialJson):
                 if len(keys) > 0:
                     return keys
             else:
-                self.logger.error("{0}: Unequal number of holding ISILs and new keys".format(self.name))
+                self.logger.error("Unequal number of holding ISILs and new keys in record {0}".format(self.get_ppn()))
