@@ -190,7 +190,7 @@ class PicaJson(SerialJson):
         """
         return self.get_value("209A", "B", occurrence=occurrence, repeat=False)
 
-    def get_holdings_isil_occurrence(self, occurrence="01"):
+    def get_holdings_isil_count(self, occurrence="01"):
         """
         209A/7100: Signatur (Exemplardaten)
           $B    Sigel (nur SWB)
@@ -221,7 +221,7 @@ class PicaJson(SerialJson):
         index = self.get_holdings_isil_index(isil, occurrence=occurrence)
         if index is not None:
             epns = self.get_holdings_epn(occurrence=occurrence)
-            if epns is not None and len(epns) == self.get_holdings_isil_occurrence(occurrence=occurrence):
+            if epns is not None and len(epns) == self.get_holdings_isil_count(occurrence=occurrence):
                 holdings = []
                 for i in index:
                     holdings.append(epns[i])
@@ -548,7 +548,7 @@ class PicaJson(SerialJson):
         index = self.get_holdings_isil_index(isil, occurrence=occurrence)
         if index is not None:
             new_dates = self.get_holdings_new_date(occurrence=occurrence)
-            if new_dates is not None and len(new_dates) == self.get_holdings_isil_occurrence(occurrence=occurrence):
+            if new_dates is not None and len(new_dates) == self.get_holdings_isil_count(occurrence=occurrence):
                 dates = []
                 for i in index:
                     dates.append(new_dates[i])
@@ -604,7 +604,7 @@ class PicaJson(SerialJson):
         index = self.get_holdings_isil_index(isil, occurrence=occurrence)
         if index is not None:
             new_key = self.get_holdings_new_key(occurrence=occurrence)
-            if new_key is not None and len(new_key) == self.get_holdings_isil_occurrence(occurrence=occurrence):
+            if new_key is not None and len(new_key) == self.get_holdings_isil_count(occurrence=occurrence):
                 keys = []
                 for i in index:
                     keys.append(new_key[i])
