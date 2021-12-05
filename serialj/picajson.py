@@ -190,7 +190,7 @@ class PicaJson(SerialJson):
         """
         return self.get_value("209A", "B", occurrence=occurrence, repeat=False)
 
-    def get_holdings_isil_occurrence(self, occurrence="01"):
+    def get_holdings_isil_count(self, occurrence="01"):
         """
         209A/7100: Signatur (Exemplardaten)
           $B    Sigel (nur SWB)
@@ -221,7 +221,7 @@ class PicaJson(SerialJson):
         index = self.get_holdings_isil_index(isil, occurrence=occurrence)
         if index is not None:
             epns = self.get_holdings_epn(occurrence=occurrence)
-            if epns is not None and len(epns) == self.get_holdings_isil_occurrence(occurrence=occurrence):
+            if epns is not None and len(epns) == self.get_holdings_isil_count(occurrence=occurrence):
                 holdings = []
                 for i in index:
                     holdings.append(epns[i])
@@ -449,6 +449,49 @@ class PicaJson(SerialJson):
             if len(dates) > 0:
                 return dates
 
+    def get_holdings_eln(self, occurrence="01"):
+        """
+        201D/7901: Quelle der Ersterfassung (Exemplardaten)
+        """
+        return self.get_holdings_source_first_entry_eln(occurrence=occurrence)
+
+    def get_holdings_eln_count(self, occurrence="01"):
+        """
+        201D/7901: Quelle der Ersterfassung (Exemplardaten)
+        """
+        codes = self.get_holdings_eln(occurrence=occurrence)
+        if codes is not None:
+            return len(codes)
+        else:
+            return 0
+
+    def get_holdings_eln_index(self, eln, occurrence="01"):
+        """
+        201D/7901: Quelle der Ersterfassung (Exemplardaten)
+        """
+        codes = self.get_holdings_eln(occurrence=occurrence)
+        if codes is not None:
+            index = [i for i, c in enumerate(codes) if c == eln]
+            if len(index) > 0:
+                return index
+
+    def get_holdings_from_eln(self, eln, occurrence="01"):
+        """
+        201D/7901: Quelle der Ersterfassung (Exemplardaten)
+        203@/7800: EPNs der Exemplardaten
+        """
+        index = self.get_holdings_eln_index(eln, occurrence=occurrence)
+        if index is not None:
+            epns = self.get_holdings_epn(occurrence=occurrence)
+            if epns is not None and len(epns) == self.get_holdings_eln_count(occurrence=occurrence):
+                holdings = []
+                for i in index:
+                    holdings.append(epns[i])
+                if len(holdings) > 0:
+                    return holdings
+            else:
+                self.logger.error("Unequal number of holding ELNs and EPNs in record {0}".format(self.get_ppn()))
+
     def get_holdings_eln_first_entry(self, eln, occurrence="01"):
         """
         201D/7901: Quelle und Datum der Ersterfassung (Exemplardaten)
@@ -548,7 +591,7 @@ class PicaJson(SerialJson):
         index = self.get_holdings_isil_index(isil, occurrence=occurrence)
         if index is not None:
             new_dates = self.get_holdings_new_date(occurrence=occurrence)
-            if new_dates is not None and len(new_dates) == self.get_holdings_isil_occurrence(occurrence=occurrence):
+            if new_dates is not None and len(new_dates) == self.get_holdings_isil_count(occurrence=occurrence):
                 dates = []
                 for i in index:
                     dates.append(new_dates[i])
@@ -604,7 +647,7 @@ class PicaJson(SerialJson):
         index = self.get_holdings_isil_index(isil, occurrence=occurrence)
         if index is not None:
             new_key = self.get_holdings_new_key(occurrence=occurrence)
-            if new_key is not None and len(new_key) == self.get_holdings_isil_occurrence(occurrence=occurrence):
+            if new_key is not None and len(new_key) == self.get_holdings_isil_count(occurrence=occurrence):
                 keys = []
                 for i in index:
                     keys.append(new_key[i])
