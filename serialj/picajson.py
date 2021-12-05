@@ -322,13 +322,16 @@ class PicaJson(SerialJson):
         """
         index = self.get_holdings_isil_index(isil)
         if index is not None:
-            isil_latest_change_str = []
             change_str = self.get_holdings_latest_change_str(occurrence=occurrence)
             if change_str is not None:
-                for i in index:
-                    isil_latest_change_str.append(change_str[i])
-            if len(isil_latest_change_str) > 0:
-                return isil_latest_change_str
+                if len(change_str) == self.get_holdings_isil_count(occurrence=occurrence):
+                    isil_latest_change_str = []
+                    for i in index:
+                        isil_latest_change_str.append(change_str[i])
+                    if len(isil_latest_change_str) > 0:
+                        return isil_latest_change_str
+                else:
+                    self.logger.error("Unequal number of holding ISILs and new dates in record {0}".format(self.get_ppn()))
 
     def get_holdings_isil_latest_change_datetime(self, isil, occurrence="01"):
         """
@@ -635,14 +638,15 @@ class PicaJson(SerialJson):
         index = self.get_holdings_isil_index(isil, occurrence=occurrence)
         if index is not None:
             new_dates = self.get_holdings_new_date(occurrence=occurrence)
-            if new_dates is not None and len(new_dates) == self.get_holdings_isil_count(occurrence=occurrence):
-                dates = []
-                for i in index:
-                    dates.append(new_dates[i])
-                if len(dates) > 0:
-                    return dates
-            else:
-                self.logger.error("Unequal number of holding ISILs and new dates in record {0}".format(self.get_ppn()))
+            if new_dates is not None:
+                if len(new_dates) == self.get_holdings_isil_count(occurrence=occurrence):
+                    dates = []
+                    for i in index:
+                        dates.append(new_dates[i])
+                    if len(dates) > 0:
+                        return dates
+                else:
+                    self.logger.error("Unequal number of holding ISILs and new dates in record {0}".format(self.get_ppn()))
 
     def get_holdings_isil_new_date_date(self, isil, occurrence="01"):
         """
@@ -691,11 +695,12 @@ class PicaJson(SerialJson):
         index = self.get_holdings_isil_index(isil, occurrence=occurrence)
         if index is not None:
             new_key = self.get_holdings_new_key(occurrence=occurrence)
-            if new_key is not None and len(new_key) == self.get_holdings_isil_count(occurrence=occurrence):
-                keys = []
-                for i in index:
-                    keys.append(new_key[i])
-                if len(keys) > 0:
-                    return keys
-            else:
-                self.logger.error("Unequal number of holding ISILs and new keys in record {0}".format(self.get_ppn()))
+            if new_key is not None:
+                if len(new_key) == self.get_holdings_isil_count(occurrence=occurrence):
+                    keys = []
+                    for i in index:
+                        keys.append(new_key[i])
+                    if len(keys) > 0:
+                        return keys
+                else:
+                    self.logger.error("Unequal number of holding ISILs and new keys in record {0}".format(self.get_ppn()))
