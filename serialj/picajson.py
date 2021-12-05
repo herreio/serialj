@@ -137,11 +137,49 @@ class PicaJson(SerialJson):
         """
         return self.get_value("203@", "0", occurrence=occurrence, repeat=False)
 
-    def get_holdings_ilns(self, occurrence=None):
+    def get_holdings_iln(self, occurrence=None):
         """
         101@: ILNs der Exemplardaten
         """
         return self.get_value("101@", "a", occurrence=occurrence, repeat=False)
+
+    def get_holdings_iln_index(self, iln, occurrence=None):
+        """
+        101@: ILNs der Exemplardaten
+        """
+        codes = self.get_holdings_iln(occurrence=occurrence)
+        if codes is not None:
+            index = [i for i, c in enumerate(codes) if c == iln]
+            if len(index) > 0:
+                return index
+
+    def get_holdings_iln_count(self, occurrence=None):
+        """
+        209A/7100: Signatur (Exemplardaten)
+          $B    Sigel (nur SWB)
+        """
+        codes = self.get_holdings_iln(occurrence=occurrence)
+        if codes is not None:
+            return len(codes)
+        else:
+            return 0
+
+    def get_holdings_from_iln(self, iln):
+        """
+        101@: ILNs der Exemplardaten
+        203@/7800: EPNs der Exemplardaten
+        """
+        index = self.get_holdings_iln_index(iln, occurrence=None)
+        if index is not None:
+            epns = self.get_holdings_epn(occurrence="01")
+            if epns is not None and len(epns) == self.get_holdings_iln_count(occurrence=None):
+                holdings = []
+                for i in index:
+                    holdings.append(epns[i])
+                if len(holdings) > 0:
+                    return holdings
+            else:
+                self.logger.error("Unequal number of holding ILNs and EPNs in record {0}".format(self.get_ppn()))
 
     def get_holdings_isil(self, occurrence="01"):
         """
@@ -309,6 +347,47 @@ class PicaJson(SerialJson):
         201B/7903: Datum und Uhrzeit der letzten Änderung (Exemplardaten) (in ISO format)
         """
         change_str = self.get_holdings_isil_latest_change_str(isil, occurrence=occurrence)
+        if change_str is not None:
+            latest_change_iso = []
+            for ch_str in change_str:
+                latest_change_iso.append(datetime.datetime.strptime(ch_str, "%d-%m-%y %H:%M:%S.%f").isoformat())
+            if len(latest_change_iso) > 0:
+                return latest_change_iso
+
+    def get_holdings_iln_latest_change_str(self, iln):
+        """
+        201B/7903: Datum und Uhrzeit der letzten Änderung (Exemplardaten)
+        """
+        index = self.get_holdings_iln_index(iln, occurrence=None)
+        if index is not None:
+            change_str = self.get_holdings_latest_change_str(occurrence="01")
+            if change_str is not None:
+                if len(change_str) == self.get_holdings_iln_count(occurrence=None):
+                    isil_latest_change_str = []
+                    for i in index:
+                        isil_latest_change_str.append(change_str[i])
+                    if len(isil_latest_change_str) > 0:
+                        return isil_latest_change_str
+                else:
+                    self.logger.error("Unequal number of holding ILNs and EPNs in record {0}".format(self.get_ppn()))
+
+    def get_holdings_iln_latest_change_datetime(self, iln):
+        """
+        201B/7903: Datum und Uhrzeit der letzten Änderung (Exemplardaten) (as datetime object)
+        """
+        change_str = self.get_holdings_iln_latest_change_str(iln)
+        if change_str is not None:
+            latest_change_datetime = []
+            for ch_str in change_str:
+                latest_change_datetime.append(datetime.datetime.strptime(ch_str, "%d-%m-%y %H:%M:%S.%f"))
+            if len(latest_change_datetime) > 0:
+                return latest_change_datetime
+
+    def get_holdings_iln_latest_change_iso(self, iln):
+        """
+        201B/7903: Datum und Uhrzeit der letzten Änderung (Exemplardaten) (in ISO format)
+        """
+        change_str = self.get_holdings_iln_latest_change_str(iln)
         if change_str is not None:
             latest_change_iso = []
             for ch_str in change_str:
