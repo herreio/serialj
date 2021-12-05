@@ -492,6 +492,50 @@ class PicaJson(SerialJson):
             else:
                 self.logger.error("Unequal number of holding ELNs and EPNs in record {0}".format(self.get_ppn()))
 
+    def get_holdings_eln_latest_change_str(self, eln, occurrence="01"):
+        """
+        201B/7903: Datum und Uhrzeit der letzten Änderung (Exemplardaten)
+        201D/7901: Quelle der Ersterfassung (Exemplardaten)
+        """
+        index = self.get_holdings_eln_index(eln, occurrence=occurrence)
+        if index is not None:
+            change_str = self.get_holdings_latest_change_str(occurrence=occurrence)
+            if change_str is not None:
+                if len(change_str) == self.get_holdings_eln_count(occurrence=occurrence):
+                    isil_latest_change_str = []
+                    for i in index:
+                        isil_latest_change_str.append(change_str[i])
+                    if len(isil_latest_change_str) > 0:
+                        return isil_latest_change_str
+                else:
+                    self.logger.error("Unequal number of holding ELNs and EPNs in record {0}".format(self.get_ppn()))
+
+    def get_holdings_eln_latest_change_datetime(self, eln, occurrence="01"):
+        """
+        201B/7903: Datum und Uhrzeit der letzten Änderung (Exemplardaten) (as datetime object)
+        201D/7901: Quelle der Ersterfassung (Exemplardaten)
+        """
+        change_str = self.get_holdings_eln_latest_change_str(eln, occurrence=occurrence)
+        if change_str is not None:
+            latest_change_datetime = []
+            for ch_str in change_str:
+                latest_change_datetime.append(datetime.datetime.strptime(ch_str, "%d-%m-%y %H:%M:%S.%f").astimezone(self.timezone))
+            if len(latest_change_datetime) > 0:
+                return latest_change_datetime
+
+    def get_holdings_eln_latest_change_iso(self, eln, occurrence="01"):
+        """
+        201B/7903: Datum und Uhrzeit der letzten Änderung (Exemplardaten) (in ISO format)
+        201D/7901: Quelle der Ersterfassung (Exemplardaten)
+        """
+        change_str = self.get_holdings_eln_latest_change_str(eln, occurrence=occurrence)
+        if change_str is not None:
+            latest_change_iso = []
+            for ch_str in change_str:
+                latest_change_iso.append(datetime.datetime.strptime(ch_str, "%d-%m-%y %H:%M:%S.%f").astimezone(self.timezone).isoformat())
+            if len(latest_change_iso) > 0:
+                return latest_change_iso
+
     def get_holdings_eln_first_entry(self, eln, occurrence="01"):
         """
         201D/7901: Quelle und Datum der Ersterfassung (Exemplardaten)
