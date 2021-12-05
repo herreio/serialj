@@ -1,4 +1,5 @@
 import logging
+import datetime
 from .utils import set_stream
 
 
@@ -16,3 +17,4 @@ class Parser:
             level = logging.INFO
         if not self.logger.handlers:
             set_stream(self.logger, level=level)
+        self.timezone = datetime.datetime.now(datetime.timezone.utc).astimezone().tzinfo
