@@ -11,4 +11,5 @@ setuptools.setup(
     license=open("LICENSE").read(),
     url="https://github.com/herreio/serialj",
     packages=["serialj"],
+    install_requires=["python-dateutil"],
 )
