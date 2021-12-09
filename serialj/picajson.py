@@ -26,7 +26,7 @@ class PicaJson(SerialJson):
         if unique:
             if len(found) == 1:
                 return found[0]
-            else:
+            elif len(found) > 1:
                 self.logger.warning("Expected field {0} to be unique. Found {1} occurrences.".format(name, len(found)))
         if len(found) > 0:
             return found
