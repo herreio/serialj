@@ -133,9 +133,29 @@ class PicaJson(SerialJson):
 
     def get_holdings_epn(self, occurrence="01"):
         """
-        203@/7800: EPNs der Exemplardaten
+        203@/7800: EPN (Exemplardaten)
         """
         return self.get_value("203@", "0", occurrence=occurrence, repeat=False)
+
+    def get_holdings_epn_index(self, epn, occurrence="01"):
+        """
+        203@/7800: EPN (Exemplardaten)
+        """
+        epns = self.get_holdings_epn(occurrence=occurrence)
+        if epns is not None:
+            index = [i for i, e in enumerate(epns) if e == epn]
+            if len(index) == 1:
+                return index[0]
+
+    def get_holdings_epn_count(self, occurrence="01"):
+        """
+        203@/7800: EPN (Exemplardaten)
+        """
+        epns = self.get_holdings_epn(occurrence=occurrence)
+        if epns is not None:
+            return len(epns)
+        else:
+            return 0
 
     def get_holdings_iln(self, occurrence=None):
         """
@@ -167,7 +187,7 @@ class PicaJson(SerialJson):
     def get_holdings_from_iln(self, iln):
         """
         101@: ILNs der Exemplardaten
-        203@/7800: EPNs der Exemplardaten
+        203@/7800: EPN (Exemplardaten)
         """
         index = self.get_holdings_iln_index(iln, occurrence=None)
         if index is not None:
@@ -214,21 +234,22 @@ class PicaJson(SerialJson):
 
     def get_holdings_from_isil(self, isil, occurrence="01"):
         """
-        203@/7800: EPNs der Exemplardaten
+        203@/7800: EPN (Exemplardaten)
         209A/7100: Signatur (Exemplardaten)
             $B    Sigel (nur SWB)
         """
         index = self.get_holdings_isil_index(isil, occurrence=occurrence)
         if index is not None:
             epns = self.get_holdings_epn(occurrence=occurrence)
-            if epns is not None and len(epns) == self.get_holdings_isil_count(occurrence=occurrence):
-                holdings = []
-                for i in index:
-                    holdings.append(epns[i])
-                if len(holdings) > 0:
-                    return holdings
-            else:
-                self.logger.error("Unequal number of holding ISILs and EPNs in record {0}".format(self.get_ppn()))
+            if epns is not None:
+                if len(epns) == self.get_holdings_isil_count(occurrence=occurrence):
+                    holdings = []
+                    for i in index:
+                        holdings.append(epns[i])
+                    if len(holdings) > 0:
+                        return holdings
+                else:
+                    self.logger.error("Unequal number of holding ISILs and EPNs in record {0}".format(self.get_ppn()))
 
     def get_holdings_first_entry_date(self, occurrence="01"):
         """
@@ -316,8 +337,42 @@ class PicaJson(SerialJson):
             if len(latest_change_iso) > 0:
                 return latest_change_iso
 
+    def get_holdings_epn_latest_change_str(self, epn, occurrence="01"):
+        """
+        203@/7800: EPN (Exemplardaten)
+        201B/7903: Datum und Uhrzeit der letzten Änderung (Exemplardaten)
+        """
+        index = self.get_holdings_epn_index(epn, occurrence=occurrence)
+        if index is not None:
+            change_str = self.get_holdings_latest_change_str(occurrence=occurrence)
+            if change_str is not None:
+                if len(change_str) == self.get_holdings_epn_count(occurrence=occurrence):
+                    return change_str[index]
+                else:
+                    self.logger.error("Unequal number of holding EPNs and modified timestamps in record {0}".format(self.get_ppn()))
+
+    def get_holdings_epn_latest_change_datetime(self, epn, occurrence="01"):
+        """
+        203@/7800: EPN (Exemplardaten)
+        201B/7903: Datum und Uhrzeit der letzten Änderung (Exemplardaten) (as datetime object)
+        """
+        change_str = self.get_holdings_epn_latest_change_str(epn, occurrence=occurrence)
+        if change_str is not None:
+            return datetime.datetime.strptime(change_str, "%d-%m-%y %H:%M:%S.%f").astimezone(self.timezone)
+
+    def get_holdings_epn_latest_change_iso(self, epn, occurrence="01"):
+        """
+        203@/7800: EPN (Exemplardaten)
+        201B/7903: Datum und Uhrzeit der letzten Änderung (Exemplardaten) (in ISO format)
+        """
+        change_str = self.get_holdings_epn_latest_change_datetime(epn, occurrence=occurrence)
+        if change_str is not None:
+            return change_str.isoformat()
+
     def get_holdings_isil_latest_change_str(self, isil, occurrence="01"):
         """
+        209A/7100: Signatur (Exemplardaten)
+            $B    Sigel (nur SWB)
         201B/7903: Datum und Uhrzeit der letzten Änderung (Exemplardaten)
         """
         index = self.get_holdings_isil_index(isil)
@@ -331,10 +386,12 @@ class PicaJson(SerialJson):
                     if len(isil_latest_change_str) > 0:
                         return isil_latest_change_str
                 else:
-                    self.logger.error("Unequal number of holding ISILs and new dates in record {0}".format(self.get_ppn()))
+                    self.logger.error("Unequal number of holding ISILs and modified timestamps in record {0}".format(self.get_ppn()))
 
     def get_holdings_isil_latest_change_datetime(self, isil, occurrence="01"):
         """
+        209A/7100: Signatur (Exemplardaten)
+            $B    Sigel (nur SWB)
         201B/7903: Datum und Uhrzeit der letzten Änderung (Exemplardaten) (as datetime object)
         """
         change_str = self.get_holdings_isil_latest_change_str(isil, occurrence=occurrence)
@@ -347,6 +404,8 @@ class PicaJson(SerialJson):
 
     def get_holdings_isil_latest_change_iso(self, isil, occurrence="01"):
         """
+        209A/7100: Signatur (Exemplardaten)
+            $B    Sigel (nur SWB)
         201B/7903: Datum und Uhrzeit der letzten Änderung (Exemplardaten) (in ISO format)
         """
         change_str = self.get_holdings_isil_latest_change_str(isil, occurrence=occurrence)
@@ -359,6 +418,7 @@ class PicaJson(SerialJson):
 
     def get_holdings_iln_latest_change_str(self, iln):
         """
+        101@: ILNs der Exemplardaten
         201B/7903: Datum und Uhrzeit der letzten Änderung (Exemplardaten)
         """
         index = self.get_holdings_iln_index(iln, occurrence=None)
@@ -376,6 +436,7 @@ class PicaJson(SerialJson):
 
     def get_holdings_iln_latest_change_datetime(self, iln):
         """
+        101@: ILNs der Exemplardaten
         201B/7903: Datum und Uhrzeit der letzten Änderung (Exemplardaten) (as datetime object)
         """
         change_str = self.get_holdings_iln_latest_change_str(iln)
@@ -388,6 +449,7 @@ class PicaJson(SerialJson):
 
     def get_holdings_iln_latest_change_iso(self, iln):
         """
+        101@: ILNs der Exemplardaten
         201B/7903: Datum und Uhrzeit der letzten Änderung (Exemplardaten) (in ISO format)
         """
         change_str = self.get_holdings_iln_latest_change_str(iln)
@@ -481,7 +543,7 @@ class PicaJson(SerialJson):
     def get_holdings_from_eln(self, eln, occurrence="01"):
         """
         201D/7901: Quelle der Ersterfassung (Exemplardaten)
-        203@/7800: EPNs der Exemplardaten
+        203@/7800: EPN (Exemplardaten)
         """
         index = self.get_holdings_eln_index(eln, occurrence=occurrence)
         if index is not None:
