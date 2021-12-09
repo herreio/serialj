@@ -1,3 +1,7 @@
+0.2.6
+
+- fix strptime ValueError in PicaJson
+
 0.2.5
 
 - add and update PicaJson holding methods

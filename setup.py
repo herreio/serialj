@@ -4,7 +4,7 @@ import setuptools
 
 setuptools.setup(
     name="serialj",
-    version="0.2.5",
+    version="0.2.6",
     author="Donatus Herre",
     author_email="donatus.herre@slub-dresden.de",
     description="Parse JSON serialized MARC or PICA data.",
