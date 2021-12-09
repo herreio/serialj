@@ -116,7 +116,10 @@ class PicaJson(SerialJson):
         001B/0210: Zeitstempel der letzten Änderung (as datetime object)
         """
         change_datetime = self.get_latest_change_str()
-        return datetime.datetime.strptime(change_datetime, "%d-%m-%y %H:%M:%S.%f").astimezone(self.timezone)
+        try:
+            return datetime.datetime.strptime(change_datetime, "%d-%m-%y %H:%M:%S.%f").astimezone(self.timezone)
+        except ValueError:
+            return datetime.datetime.strptime(change_datetime, "%d-%m-%y 22:22:22:222").astimezone(self.timezone)
 
     def get_latest_change_iso(self):
         """
