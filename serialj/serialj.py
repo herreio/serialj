@@ -13,11 +13,12 @@ class SerialJson(Parser):
 
     def _indices(self):
         indices = {}
-        for i, field in enumerate(self.data):
-            if field[0] in indices:
-                indices[field[0]].append(i)
-            else:
-                indices[field[0]] = [i]
+        if self.data is not None:
+            for i, field in enumerate(self.data):
+                if field[0] in indices:
+                    indices[field[0]].append(i)
+                else:
+                    indices[field[0]] = [i]
         return indices
 
     def _field_pos(self, name):

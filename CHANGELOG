@@ -1,3 +1,8 @@
+0.2.5
+
+- add and update PicaJson holding methods
+- prevent TypeError in SerialJson
+
 0.2.4
 
 - update PicaJson holding methods
