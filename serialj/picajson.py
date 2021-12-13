@@ -38,8 +38,6 @@ class PicaJson(SerialJson):
                 return self._value_from_row(found, subfield, repeat=repeat)
             else:
                 return self._value_from_rows(found, subfield, repeat=repeat, collapse=collapse, preserve=True)
-        else:
-            self.logger.error("Field {0} with occurrence {1} not found!".format(field, occurrence))
 
     def get_ppn(self):
         """
