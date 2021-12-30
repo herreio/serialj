@@ -202,6 +202,28 @@ class PicaJson(SerialJson):
             else:
                 self.logger.error("Unequal number of holding ILNs and EPNs in record {0}".format(self.get_ppn()))
 
+    def get_holdings_signature(self, occurrence="01"):
+        """
+        209A/7100: Signatur (Exemplardaten)
+          $a    Signatur
+        """
+        return self.get_value("209A", "a", occurrence=occurrence, repeat=False)
+
+    def get_holdings_epn_signature(self, epn, occurrence="01"):
+        """
+        203@/7800: EPN (Exemplardaten)
+        209A/7100: Signatur (Exemplardaten)
+          $a    Signatur
+        """
+        index = self.get_holdings_epn_index(epn, occurrence=occurrence)
+        if index is not None:
+            signatures = self.get_holdings_signature(occurrence=occurrence)
+            if signatures is not None:
+                if len(signatures) == self.get_holdings_epn_count(occurrence=occurrence):
+                    return signatures[index]
+                else:
+                    self.logger.error("Unequal number of holding EPNs and signatures in record {0}".format(self.get_ppn()))
+
     def get_holdings_isil(self, occurrence="01"):
         """
         209A/7100: Signatur (Exemplardaten)
