@@ -26,7 +26,7 @@ class PicaJson(SerialJson):
         if unique:
             if len(found) == 1:
                 return found[0]
-            else:
+            elif len(found) > 1:
                 self.logger.warning("Expected field {0} to be unique. Found {1} occurrences.".format(name, len(found)))
         if len(found) > 0:
             return found
@@ -38,8 +38,6 @@ class PicaJson(SerialJson):
                 return self._value_from_row(found, subfield, repeat=repeat)
             else:
                 return self._value_from_rows(found, subfield, repeat=repeat, collapse=collapse, preserve=True)
-        else:
-            self.logger.error("Field {0} with occurrence {1} not found!".format(field, occurrence))
 
     def get_ppn(self):
         """
@@ -203,6 +201,28 @@ class PicaJson(SerialJson):
                     return holdings
             else:
                 self.logger.error("Unequal number of holding ILNs and EPNs in record {0}".format(self.get_ppn()))
+
+    def get_holdings_signature(self, occurrence="01"):
+        """
+        209A/7100: Signatur (Exemplardaten)
+          $a    Signatur
+        """
+        return self.get_value("209A", "a", occurrence=occurrence, repeat=False)
+
+    def get_holdings_epn_signature(self, epn, occurrence="01"):
+        """
+        203@/7800: EPN (Exemplardaten)
+        209A/7100: Signatur (Exemplardaten)
+          $a    Signatur
+        """
+        index = self.get_holdings_epn_index(epn, occurrence=occurrence)
+        if index is not None:
+            signatures = self.get_holdings_signature(occurrence=occurrence)
+            if signatures is not None:
+                if len(signatures) == self.get_holdings_epn_count(occurrence=occurrence):
+                    return signatures[index]
+                else:
+                    self.logger.error("Unequal number of holding EPNs and signatures in record {0}".format(self.get_ppn()))
 
     def get_holdings_isil(self, occurrence="01"):
         """

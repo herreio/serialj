@@ -140,3 +140,25 @@ class MarcJson(SerialJson):
                 holdings.append(self._value_from_row(isil_field, "a", repeat=False))
         if len(holdings) > 0:
             return holdings
+
+    def get_holdings_signature(self, indicator1="0", indicator2=None):
+        """
+        924/DNB: Bestandsinformationen (Signatur)
+        """
+        return self.get_value("924", "g", indicator1=indicator1, indicator2=indicator2, repeat=False)
+
+    def get_holdings_signature_from_isil(self, isil, indicator1="0", indicator2=None):
+        """
+        924/DNB: Bestandsinformationen (Signatur)
+        """
+        isils = self.get_holdings_isil(indicator1=indicator1, indicator2=indicator2)
+        if isils is None or isil not in isils:
+            self.logger.info("Library {0} has no holding for record {1}".format(isil, self.get_ppn()))
+            return None
+        signatures = []
+        isil_fields = self.get_field("924")
+        for isil_field in isil_fields:
+            if self._value_from_row(isil_field, "b", repeat=False) == isil:
+                signatures.append(self._value_from_row(isil_field, "g", repeat=False))
+        if len(signatures) > 0:
+            return signatures
