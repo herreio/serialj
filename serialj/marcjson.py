@@ -65,7 +65,7 @@ class MarcJson(SerialJson):
         latest_trans = self.get_latest_trans()
         if latest_trans is not None:
             try:
-                return datetime.datetime.strptime(latest_trans, "%Y%m%d%H%M%S.0").astimezone(self.timezone)
+                return datetime.datetime.strptime(latest_trans, "%Y%m%d%H%M%S.0")
             except ValueError:
                 return datetime.datetime.strptime(latest_trans, "%Y%m%d222222:2")
 
