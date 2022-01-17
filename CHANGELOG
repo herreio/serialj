@@ -1,3 +1,7 @@
+0.2.8
+
+- stop adding timezone to timestamps
+
 0.2.7
 
 - add holding methods to MarcJson and PicaJson
