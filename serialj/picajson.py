@@ -115,9 +115,9 @@ class PicaJson(SerialJson):
         """
         change_datetime = self.get_latest_change_str()
         try:
-            return datetime.datetime.strptime(change_datetime, "%d-%m-%y %H:%M:%S.%f").astimezone(self.timezone)
+            return datetime.datetime.strptime(change_datetime, "%d-%m-%y %H:%M:%S.%f")
         except ValueError:
-            return datetime.datetime.strptime(change_datetime, "%d-%m-%y 22:22:22:222").astimezone(self.timezone)
+            return datetime.datetime.strptime(change_datetime, "%d-%m-%y 22:22:22:222")
 
     def get_latest_change_iso(self):
         """
@@ -339,7 +339,7 @@ class PicaJson(SerialJson):
             latest_change_datetime = []
             for ch_str in change_str:
                 if ch_str != "" and ch_str is not None:
-                    latest_change_datetime.append(datetime.datetime.strptime(ch_str, "%d-%m-%y %H:%M:%S.%f").astimezone(self.timezone))
+                    latest_change_datetime.append(datetime.datetime.strptime(ch_str, "%d-%m-%y %H:%M:%S.%f"))
                 else:
                     latest_change_datetime.append(ch_str)
             if len(latest_change_datetime) > 0:
@@ -354,7 +354,7 @@ class PicaJson(SerialJson):
             latest_change_iso = []
             for ch_str in change_str:
                 if ch_str != "" and ch_str is not None:
-                    latest_change_iso.append(datetime.datetime.strptime(ch_str, "%d-%m-%y %H:%M:%S.%f").astimezone(self.timezone).isoformat())
+                    latest_change_iso.append(datetime.datetime.strptime(ch_str, "%d-%m-%y %H:%M:%S.%f").isoformat())
                 else:
                     latest_change_iso.append(ch_str)
             if len(latest_change_iso) > 0:
@@ -381,7 +381,7 @@ class PicaJson(SerialJson):
         """
         change_str = self.get_holdings_epn_latest_change_str(epn, occurrence=occurrence)
         if change_str is not None:
-            return datetime.datetime.strptime(change_str, "%d-%m-%y %H:%M:%S.%f").astimezone(self.timezone)
+            return datetime.datetime.strptime(change_str, "%d-%m-%y %H:%M:%S.%f")
 
     def get_holdings_epn_latest_change_iso(self, epn, occurrence="01"):
         """
@@ -421,7 +421,7 @@ class PicaJson(SerialJson):
         if change_str is not None:
             latest_change_datetime = []
             for ch_str in change_str:
-                latest_change_datetime.append(datetime.datetime.strptime(ch_str, "%d-%m-%y %H:%M:%S.%f").astimezone(self.timezone))
+                latest_change_datetime.append(datetime.datetime.strptime(ch_str, "%d-%m-%y %H:%M:%S.%f"))
             if len(latest_change_datetime) > 0:
                 return latest_change_datetime
 
@@ -435,7 +435,7 @@ class PicaJson(SerialJson):
         if change_str is not None:
             latest_change_iso = []
             for ch_str in change_str:
-                latest_change_iso.append(datetime.datetime.strptime(ch_str, "%d-%m-%y %H:%M:%S.%f").astimezone(self.timezone).isoformat())
+                latest_change_iso.append(datetime.datetime.strptime(ch_str, "%d-%m-%y %H:%M:%S.%f").isoformat())
             if len(latest_change_iso) > 0:
                 return latest_change_iso
 
@@ -466,7 +466,7 @@ class PicaJson(SerialJson):
         if change_str is not None:
             latest_change_datetime = []
             for ch_str in change_str:
-                latest_change_datetime.append(datetime.datetime.strptime(ch_str, "%d-%m-%y %H:%M:%S.%f").astimezone(self.timezone))
+                latest_change_datetime.append(datetime.datetime.strptime(ch_str, "%d-%m-%y %H:%M:%S.%f"))
             if len(latest_change_datetime) > 0:
                 return latest_change_datetime
 
@@ -479,7 +479,7 @@ class PicaJson(SerialJson):
         if change_str is not None:
             latest_change_iso = []
             for ch_str in change_str:
-                latest_change_iso.append(datetime.datetime.strptime(ch_str, "%d-%m-%y %H:%M:%S.%f").astimezone(self.timezone).isoformat())
+                latest_change_iso.append(datetime.datetime.strptime(ch_str, "%d-%m-%y %H:%M:%S.%f").isoformat())
             if len(latest_change_iso) > 0:
                 return latest_change_iso
 
@@ -607,7 +607,7 @@ class PicaJson(SerialJson):
         if change_str is not None:
             latest_change_datetime = []
             for ch_str in change_str:
-                latest_change_datetime.append(datetime.datetime.strptime(ch_str, "%d-%m-%y %H:%M:%S.%f").astimezone(self.timezone))
+                latest_change_datetime.append(datetime.datetime.strptime(ch_str, "%d-%m-%y %H:%M:%S.%f"))
             if len(latest_change_datetime) > 0:
                 return latest_change_datetime
 
@@ -620,7 +620,7 @@ class PicaJson(SerialJson):
         if change_str is not None:
             latest_change_iso = []
             for ch_str in change_str:
-                latest_change_iso.append(datetime.datetime.strptime(ch_str, "%d-%m-%y %H:%M:%S.%f").astimezone(self.timezone).isoformat())
+                latest_change_iso.append(datetime.datetime.strptime(ch_str, "%d-%m-%y %H:%M:%S.%f").isoformat())
             if len(latest_change_iso) > 0:
                 return latest_change_iso
 

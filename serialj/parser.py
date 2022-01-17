@@ -1,5 +1,4 @@
 import logging
-import dateutil.tz
 from .utils import set_stream
 
 
@@ -8,7 +7,7 @@ class Parser:
     Generic parser class
     """
 
-    def __init__(self, data, name, level, local_tz="Europe/Berlin"):
+    def __init__(self, data, name, level):
         self.data = data
         if name is None:
             name = __name__
@@ -17,4 +16,3 @@ class Parser:
             level = logging.INFO
         if not self.logger.handlers:
             set_stream(self.logger, level=level)
-        self.timezone = dateutil.tz.gettz(local_tz)
