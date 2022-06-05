@@ -116,18 +116,22 @@ class MarcJson(SerialJson):
     def get_holdings_epn(self, indicator1="0", indicator2=None):
         """
         924/DNB: Bestandsinformationen (EPN)
+          $a - Lokale IDN des Bestandsdatensatzes
         """
         return self.get_value("924", "a", indicator1=indicator1, indicator2=indicator2, repeat=False)
 
     def get_holdings_isil(self, indicator1="0", indicator2=None):
         """
         924/DNB: Bestandsinformationen (ISIL)
+          $b - ISIL als Kennzeichnung der besitzenden Institution
         """
         return self.get_value("924", "b", indicator1=indicator1, indicator2=indicator2, repeat=False)
 
     def get_holdings_from_isil(self, isil, indicator1="0", indicator2=None):
         """
         924/DNB: Bestandsinformationen (EPN)
+          $b - ISIL als Kennzeichnung der besitzenden Institution
+          $a - Lokale IDN des Bestandsdatensatzes
         """
         isils = self.get_holdings_isil(indicator1=indicator1, indicator2=indicator2)
         if isils is None or isil not in isils:
@@ -144,12 +148,15 @@ class MarcJson(SerialJson):
     def get_holdings_status(self, indicator1="0", indicator2=None):
         """
         924/DNB: Bestandsinformationen (Fernleihindikator)
+          $d - Fernleihindikator
         """
         return self.get_value("924", "d", indicator1=indicator1, indicator2=indicator2, repeat=False)
 
     def get_holdings_status_from_isil(self, isil, indicator1="0", indicator2=None):
         """
         924/DNB: Bestandsinformationen (Fernleihindikator)
+          $b - ISIL als Kennzeichnung der besitzenden Institution
+          $d - Fernleihindikator
         """
         isils = self.get_holdings_isil(indicator1=indicator1, indicator2=indicator2)
         if isils is None or isil not in isils:
@@ -166,12 +173,15 @@ class MarcJson(SerialJson):
     def get_holdings_signature(self, indicator1="0", indicator2=None):
         """
         924/DNB: Bestandsinformationen (Signatur)
+          $g - Signatur
         """
         return self.get_value("924", "g", indicator1=indicator1, indicator2=indicator2, repeat=False)
 
     def get_holdings_signature_from_isil(self, isil, indicator1="0", indicator2=None):
         """
         924/DNB: Bestandsinformationen (Signatur)
+          $b - ISIL als Kennzeichnung der besitzenden Institution
+          $d - Fernleihindikator
         """
         isils = self.get_holdings_isil(indicator1=indicator1, indicator2=indicator2)
         if isils is None or isil not in isils:
