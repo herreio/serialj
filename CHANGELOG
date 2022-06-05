@@ -1,3 +1,9 @@
+0.2.11
+
+- add holding methods to MarcJson
+- clean up docstrings in MarcJson
+- refactor holding methods in MarcJson
+
 0.2.10
 
 - fix parsing of signature in MarcJson
