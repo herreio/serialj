@@ -1,3 +1,7 @@
+0.2.9
+
+- support parsing holding status
+
 0.2.8
 
 - stop adding timezone to timestamps
