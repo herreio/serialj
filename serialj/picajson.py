@@ -224,6 +224,49 @@ class PicaJson(SerialJson):
                 else:
                     self.logger.error("Unequal number of holding EPNs and signatures in record {0}".format(self.get_ppn()))
 
+    def get_holdings_status(self, occurrence="01"):
+        """
+        209A/7100: Signatur (Exemplardaten)
+          $D	Ausleihindikator (nur SWB)
+        """
+        return self.get_value("209A", "D", occurrence=occurrence, repeat=False)
+
+    def get_holdings_epn_status(self, epn, occurrence="01"):
+        """
+        203@/7800: EPN (Exemplardaten)
+        209A/7100: Signatur (Exemplardaten)
+          $D	Ausleihindikator (nur SWB)
+        """
+        index = self.get_holdings_epn_index(epn, occurrence=occurrence)
+        if index is not None:
+            statuses = self.get_holdings_status(occurrence=occurrence)
+            if statuses is not None:
+                if len(statuses) == self.get_holdings_epn_count(occurrence=occurrence):
+                    return statuses[index]
+                else:
+                    self.logger.error("Unequal number of holding EPNs and statuses in record {0}".format(self.get_ppn()))
+
+        return self.get_value("209A", "D", occurrence=occurrence, repeat=False)
+
+    def get_holdings_isil_status(self, isil, occurrence="01"):
+        """
+        209A/7100: Signatur (Exemplardaten)
+            $B    Sigel (nur SWB)
+        201B/7903: Datum und Uhrzeit der letzten Änderung (Exemplardaten)
+        """
+        index = self.get_holdings_isil_index(isil)
+        if index is not None:
+            statuses = self.get_holdings_status(occurrence=occurrence)
+            if statuses is not None:
+                if len(statuses) == self.get_holdings_isil_count(occurrence=occurrence):
+                    isil_statuses = []
+                    for i in index:
+                        isil_statuses.append(statuses[i])
+                    if len(isil_statuses) > 0:
+                        return isil_statuses
+                else:
+                    self.logger.error("Unequal number of holding ISILs and statuses in record {0}".format(self.get_ppn()))
+
     def get_holdings_isil(self, occurrence="01"):
         """
         209A/7100: Signatur (Exemplardaten)
