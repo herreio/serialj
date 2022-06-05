@@ -175,7 +175,7 @@ class MarcJson(SerialJson):
         924/DNB: Bestandsinformationen (Signatur)
           $g - Signatur
         """
-        return self.get_value("924", "g", indicator1=indicator1, indicator2=indicator2, repeat=False)
+        return self.get_value("924", "g", indicator1=indicator1, indicator2=indicator2)
 
     def get_holdings_signature_from_isil(self, isil, indicator1="0", indicator2=None):
         """
@@ -191,6 +191,6 @@ class MarcJson(SerialJson):
         isil_fields = self.get_field("924")
         for isil_field in isil_fields:
             if self._value_from_row(isil_field, "b", repeat=False) == isil:
-                signatures.append(self._value_from_row(isil_field, "g", repeat=False))
+                signatures.append(self._value_from_row(isil_field, "g"))
         if len(signatures) > 0:
             return signatures
