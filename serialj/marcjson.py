@@ -113,6 +113,15 @@ class MarcJson(SerialJson):
         if date_entered is not None:
             return date_entered.isoformat()
 
+    # 924/DNB: Bestandsinformationen
+    # https://wiki.dnb.de/x/sQjeBw
+
+    # Indikator 1 - Art der Ressource
+    # 0 - Nicht-elektronisch ("kein Strom")
+    # 1 - Elektronisch ("Strom")
+
+    # Indikator 2 - Nicht definiert
+
     def get_holdings_epn(self, indicator1="0", indicator2=None):
         """
         924/DNB: Bestandsinformationen
@@ -155,7 +164,7 @@ class MarcJson(SerialJson):
     def get_holdings_epn_status(self, epn, indicator1="0", indicator2=None):
         """
         924/DNB: Bestandsinformationen
-          $b - ISIL als Kennzeichnung der besitzenden Institution
+          $a - Lokale IDN des Bestandsdatensatzes
           $d - Fernleihindikator
         """
         epns = self.get_holdings_epn(indicator1=indicator1, indicator2=indicator2)
