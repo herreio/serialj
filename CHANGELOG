@@ -1,3 +1,7 @@
+0.2.12
+
+- fix docstring in marcjson
+
 0.2.11
 
 - add holding methods to MarcJson
