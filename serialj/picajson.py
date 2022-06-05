@@ -227,7 +227,7 @@ class PicaJson(SerialJson):
     def get_holdings_status(self, occurrence="01"):
         """
         209A/7100: Signatur (Exemplardaten)
-          $D	Ausleihindikator (nur SWB)
+          $D    Ausleihindikator (nur SWB)
         """
         return self.get_value("209A", "D", occurrence=occurrence, repeat=False)
 
@@ -235,7 +235,7 @@ class PicaJson(SerialJson):
         """
         203@/7800: EPN (Exemplardaten)
         209A/7100: Signatur (Exemplardaten)
-          $D	Ausleihindikator (nur SWB)
+          $D    Ausleihindikator (nur SWB)
         """
         index = self.get_holdings_epn_index(epn, occurrence=occurrence)
         if index is not None:
@@ -251,8 +251,8 @@ class PicaJson(SerialJson):
     def get_holdings_isil_status(self, isil, occurrence="01"):
         """
         209A/7100: Signatur (Exemplardaten)
-            $B    Sigel (nur SWB)
-        201B/7903: Datum und Uhrzeit der letzten Änderung (Exemplardaten)
+          $B    Sigel (nur SWB)
+          $D    Ausleihindikator (nur SWB)
         """
         index = self.get_holdings_isil_index(isil)
         if index is not None:
@@ -300,9 +300,9 @@ class PicaJson(SerialJson):
 
     def get_holdings_from_isil(self, isil, occurrence="01"):
         """
-        203@/7800: EPN (Exemplardaten)
         209A/7100: Signatur (Exemplardaten)
-            $B    Sigel (nur SWB)
+          $B    Sigel (nur SWB)
+        203@/7800: EPN (Exemplardaten)
         """
         index = self.get_holdings_isil_index(isil, occurrence=occurrence)
         if index is not None:
@@ -438,7 +438,7 @@ class PicaJson(SerialJson):
     def get_holdings_isil_latest_change_str(self, isil, occurrence="01"):
         """
         209A/7100: Signatur (Exemplardaten)
-            $B    Sigel (nur SWB)
+          $B    Sigel (nur SWB)
         201B/7903: Datum und Uhrzeit der letzten Änderung (Exemplardaten)
         """
         index = self.get_holdings_isil_index(isil)
@@ -457,7 +457,7 @@ class PicaJson(SerialJson):
     def get_holdings_isil_latest_change_datetime(self, isil, occurrence="01"):
         """
         209A/7100: Signatur (Exemplardaten)
-            $B    Sigel (nur SWB)
+          $B    Sigel (nur SWB)
         201B/7903: Datum und Uhrzeit der letzten Änderung (Exemplardaten) (as datetime object)
         """
         change_str = self.get_holdings_isil_latest_change_str(isil, occurrence=occurrence)
@@ -471,7 +471,7 @@ class PicaJson(SerialJson):
     def get_holdings_isil_latest_change_iso(self, isil, occurrence="01"):
         """
         209A/7100: Signatur (Exemplardaten)
-            $B    Sigel (nur SWB)
+          $B    Sigel (nur SWB)
         201B/7903: Datum und Uhrzeit der letzten Änderung (Exemplardaten) (in ISO format)
         """
         change_str = self.get_holdings_isil_latest_change_str(isil, occurrence=occurrence)
@@ -761,7 +761,7 @@ class PicaJson(SerialJson):
         208@/E001: Neuanlagedatum und Selektionsschlüssel (Exemplardaten)
           $a    Neuanlagedatum
         209A/7100: Signatur (Exemplardaten)
-            $B    Sigel (nur SWB)
+          $B    Sigel (nur SWB)
         """
         index = self.get_holdings_isil_index(isil, occurrence=occurrence)
         if index is not None:
@@ -781,7 +781,7 @@ class PicaJson(SerialJson):
         208@/E001: Neuanlagedatum und Selektionsschlüssel (Exemplardaten)
           $a    Neuanlagedatum (as date object)
         209A/7100: Signatur (Exemplardaten)
-            $B    Sigel (nur SWB)
+          $B    Sigel (nur SWB)
         """
         new_date = self.get_holdings_isil_new_date(isil, occurrence=occurrence)
         if new_date is not None:
@@ -796,7 +796,7 @@ class PicaJson(SerialJson):
         208@/E001: Neuanlagedatum und Selektionsschlüssel (Exemplardaten)
           $a    Neuanlagedatum (in ISO format)
         209A/7100: Signatur (Exemplardaten)
-            $B    Sigel (nur SWB)
+          $B    Sigel (nur SWB)
         """
         new_date = self.get_holdings_isil_new_date_date(isil, occurrence=occurrence)
         if new_date is not None:
@@ -818,7 +818,7 @@ class PicaJson(SerialJson):
         208@/E001: Neuanlagedatum und Selektionsschlüssel (Exemplardaten)
           $b    Selektionsschlüssel
         209A/7100: Signatur (Exemplardaten)
-            $B    Sigel (nur SWB)
+          $B    Sigel (nur SWB)
         """
         index = self.get_holdings_isil_index(isil, occurrence=occurrence)
         if index is not None:
