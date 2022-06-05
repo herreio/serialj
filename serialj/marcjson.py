@@ -115,21 +115,21 @@ class MarcJson(SerialJson):
 
     def get_holdings_epn(self, indicator1="0", indicator2=None):
         """
-        924/DNB: Bestandsinformationen (EPN)
+        924/DNB: Bestandsinformationen
           $a - Lokale IDN des Bestandsdatensatzes
         """
         return self.get_value("924", "a", indicator1=indicator1, indicator2=indicator2, repeat=False)
 
     def get_holdings_isil(self, indicator1="0", indicator2=None):
         """
-        924/DNB: Bestandsinformationen (ISIL)
+        924/DNB: Bestandsinformationen
           $b - ISIL als Kennzeichnung der besitzenden Institution
         """
         return self.get_value("924", "b", indicator1=indicator1, indicator2=indicator2, repeat=False)
 
     def get_holdings_from_isil(self, isil, indicator1="0", indicator2=None):
         """
-        924/DNB: Bestandsinformationen (EPN)
+        924/DNB: Bestandsinformationen
           $b - ISIL als Kennzeichnung der besitzenden Institution
           $a - Lokale IDN des Bestandsdatensatzes
         """
@@ -138,23 +138,38 @@ class MarcJson(SerialJson):
             self.logger.info("Library {0} has no holding for record {1}".format(isil, self.get_ppn()))
             return None
         holdings = []
-        isil_fields = self.get_field("924")
-        for isil_field in isil_fields:
-            if self._value_from_row(isil_field, "b", repeat=False) == isil:
-                holdings.append(self._value_from_row(isil_field, "a", repeat=False))
+        holding_fields = self.get_field("924")
+        for holding_field in holding_fields:
+            if self._value_from_row(holding_field, "b", repeat=False) == isil:
+                holdings.append(self._value_from_row(holding_field, "a", repeat=False))
         if len(holdings) > 0:
             return holdings
 
     def get_holdings_status(self, indicator1="0", indicator2=None):
         """
-        924/DNB: Bestandsinformationen (Fernleihindikator)
+        924/DNB: Bestandsinformationen
           $d - Fernleihindikator
         """
         return self.get_value("924", "d", indicator1=indicator1, indicator2=indicator2, repeat=False)
 
-    def get_holdings_status_from_isil(self, isil, indicator1="0", indicator2=None):
+    def get_holdings_epn_status(self, epn, indicator1="0", indicator2=None):
         """
-        924/DNB: Bestandsinformationen (Fernleihindikator)
+        924/DNB: Bestandsinformationen
+          $b - ISIL als Kennzeichnung der besitzenden Institution
+          $d - Fernleihindikator
+        """
+        epns = self.get_holdings_epn(indicator1=indicator1, indicator2=indicator2)
+        if epns is None or epn not in epns:
+            self.logger.info("Holding {0} not found in record {1}".format(epn, self.get_ppn()))
+            return None
+        holding_fields = self.get_field("924")
+        for holding_field in holding_fields:
+            if self._value_from_row(holding_field, "a", repeat=False) == epn:
+                return self._value_from_row(holding_field, "d", repeat=False)
+
+    def get_holdings_isil_status(self, isil, indicator1="0", indicator2=None):
+        """
+        924/DNB: Bestandsinformationen
           $b - ISIL als Kennzeichnung der besitzenden Institution
           $d - Fernleihindikator
         """
@@ -163,34 +178,49 @@ class MarcJson(SerialJson):
             self.logger.info("Library {0} has no holding for record {1}".format(isil, self.get_ppn()))
             return None
         statuses = []
-        isil_fields = self.get_field("924")
-        for isil_field in isil_fields:
-            if self._value_from_row(isil_field, "b", repeat=False) == isil:
-                statuses.append(self._value_from_row(isil_field, "d", repeat=False))
+        holding_fields = self.get_field("924")
+        for holding_field in holding_fields:
+            if self._value_from_row(holding_field, "b", repeat=False) == isil:
+                statuses.append(self._value_from_row(holding_field, "d", repeat=False))
         if len(statuses) > 0:
             return statuses
 
     def get_holdings_signature(self, indicator1="0", indicator2=None):
         """
-        924/DNB: Bestandsinformationen (Signatur)
+        924/DNB: Bestandsinformationen
           $g - Signatur
         """
         return self.get_value("924", "g", indicator1=indicator1, indicator2=indicator2)
 
-    def get_holdings_signature_from_isil(self, isil, indicator1="0", indicator2=None):
+    def get_holdings_epn_signature(self, epn, indicator1="0", indicator2=None):
         """
-        924/DNB: Bestandsinformationen (Signatur)
+        924/DNB: Bestandsinformationen
+          $a - Lokale IDN des Bestandsdatensatzes
+          $g - Signatur
+        """
+        epns = self.get_holdings_epn(indicator1=indicator1, indicator2=indicator2)
+        if epns is None or epn not in epns:
+            self.logger.info("Holding {0} not found in record {1}".format(epn, self.get_ppn()))
+            return None
+        holding_fields = self.get_field("924")
+        for holding_field in holding_fields:
+            if self._value_from_row(holding_field, "a", repeat=False) == epn:
+                return self._value_from_row(holding_field, "g")
+
+    def get_holdings_isil_signature(self, isil, indicator1="0", indicator2=None):
+        """
+        924/DNB: Bestandsinformationen
           $b - ISIL als Kennzeichnung der besitzenden Institution
-          $d - Fernleihindikator
+          $g - Signatur
         """
         isils = self.get_holdings_isil(indicator1=indicator1, indicator2=indicator2)
         if isils is None or isil not in isils:
             self.logger.info("Library {0} has no holding for record {1}".format(isil, self.get_ppn()))
             return None
         signatures = []
-        isil_fields = self.get_field("924")
-        for isil_field in isil_fields:
-            if self._value_from_row(isil_field, "b", repeat=False) == isil:
-                signatures.append(self._value_from_row(isil_field, "g"))
+        holding_fields = self.get_field("924")
+        for holding_field in holding_fields:
+            if self._value_from_row(holding_field, "b", repeat=False) == isil:
+                signatures.append(self._value_from_row(holding_field, "g"))
         if len(signatures) > 0:
             return signatures
