@@ -1,3 +1,7 @@
+0.2.14
+
+- prevent ValueError in PicaJson (holdings_eln_first_entry_date)
+
 0.2.13
 
 - update holding methods in MarcJson
