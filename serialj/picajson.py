@@ -700,7 +700,12 @@ class PicaJson(SerialJson):
         if first_entry_date is not None:
             dates = []
             for sfe_date in first_entry_date:
-                dates.append(datetime.datetime.strptime(sfe_date, "%d-%m-%y").date())
+                sfe_date_date = None
+                try:
+                    sfe_date_date = datetime.datetime.strptime(sfe_date, "%d-%m-%y").date()
+                except ValueError:  # xx-xx-xx
+                    pass
+                dates.append(sfe_date_date)
             if len(dates) > 0:
                 return dates
 
@@ -712,7 +717,10 @@ class PicaJson(SerialJson):
         if first_entry_date is not None:
             dates = []
             for sfe_date in first_entry_date:
-                dates.append(sfe_date.isoformat())
+                sfe_date_iso = ""
+                if sfe_date is not None:
+                    sfe_date_iso = sfe_date.isoformat()
+                dates.append(sfe_date_iso)
             if len(dates) > 0:
                 return dates
 
