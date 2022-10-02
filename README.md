@@ -18,12 +18,12 @@ import json
 import serialj
 import urllib.request
 # MARC
-connection = urllib.request.urlopen("https://unapi.k10plus.de/?format=marcjson&id=opac-de-627:ppn:84738084X")
+connection = urllib.request.urlopen("https://unapi.k10plus.de/?format=marcjson&id=swb:ppn:1132450837")
 marc_raw = json.loads(connection.read().decode("UTF-8"))
 connection.close()
 marc_parsed = serialj.MarcJson(marc_raw)
 # PICA
-connection = urllib.request.urlopen("https://unapi.k10plus.de/?format=picajson&id=opac-de-627:ppn:84738084X")
+connection = urllib.request.urlopen("https://unapi.k10plus.de/?format=picajson&id=swb:ppn:1390983692")
 pica_raw = json.loads(connection.read().decode("UTF-8"))
 connection.close()
 pica_parsed = serialj.PicaJson(pica_raw)
