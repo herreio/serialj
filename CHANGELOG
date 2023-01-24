@@ -1,3 +1,7 @@
+0.2.15
+
+- update method PicaJson.get_fields
+
 0.2.14
 
 - prevent ValueError in PicaJson (holdings_eln_first_entry_date)

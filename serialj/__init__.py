@@ -3,7 +3,7 @@ Parse JSON serialized MARC and PICA data
 """
 
 __author__ = "Donatus Herre <donatus.herre@slub-dresden.de>"
-__version__ = "0.2.14"
+__version__ = "0.2.15"
 
 from . import utils
 from .marcjson import MarcJson
