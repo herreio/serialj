@@ -1,3 +1,8 @@
+0.2.16
+
+- prevent ValueError in MarcJson (date_entered)
+- prevent ValueError in PicaJson (first_entry_date)
+
 0.2.15
 
 - update method PicaJson.get_fields
