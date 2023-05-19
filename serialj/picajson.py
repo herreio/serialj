@@ -69,14 +69,18 @@ class PicaJson(SerialJson):
         001A/0200: Datum der Ersterfassung (as date object)
         """
         first_entry_date = self.get_first_entry_date()
-        return datetime.datetime.strptime(first_entry_date, "%d-%m-%y").date()
+        try:
+            return datetime.datetime.strptime(first_entry_date, "%d-%m-%y").date()
+        except ValueError:  # "00-00-00"
+            self.logger.warning("Found invalid first entry date {0} in record with PPN {1}.".format(first_entry_date, self.get_ppn()))
 
     def get_first_entry_date_iso(self):
         """
         001A/0200: Datum der Ersterfassung (in ISO format)
         """
         first_entry_date = self.get_first_entry_date_date()
-        return first_entry_date.isoformat()
+        if isinstance(first_entry_date, datetime.date):
+            return first_entry_date.isoformat()
 
     def get_latest_change(self):
         """
