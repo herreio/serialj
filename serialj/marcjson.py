@@ -100,8 +100,11 @@ class MarcJson(SerialJson):
           00-05 - Date entered on file (as date object)
         """
         date_entered = self.get_date_entered()
-        if date_entered is not None:
-            return datetime.datetime.strptime(date_entered, "%y%m%d").date()
+        if isinstance(date_entered, str):
+            try:
+                return datetime.datetime.strptime(date_entered, "%y%m%d").date()
+            except ValueError:
+                self.logger.warning("Found invalid first entry date {0} in record with PPN {1}.".format(date_entered, self.get_ppn()))
 
     def get_date_entered_iso(self):
         """
@@ -110,7 +113,7 @@ class MarcJson(SerialJson):
           00-05 - Date entered on file (in ISO format)
         """
         date_entered = self.get_date_entered_date()
-        if date_entered is not None:
+        if isinstance(date_entered, datetime.date):
             return date_entered.isoformat()
 
     # 924/DNB: Bestandsinformationen
